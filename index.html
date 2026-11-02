@@ -126,7 +126,7 @@ finding:'Finding a random photo…',findingT:a=>'Finding a photo: '+topicLabel(a
 fail:'Couldn’t get a random photo. Try again.',failT:a=>'Couldn’t find a photo in “'+topicLabel(a)+'”. Try again or pick another category.',
 printing:'Your photo is printing...',shakeIt:'Shake your iPhone to develop it!',ready:'Your Polaroid is ready!',shakeNow:'Shake your iPhone now!',
 tapEnable:'Tap to enable shake',shakeBlocked:'Shake blocked: use the tap button',shakeNA:'Shake not available: use the tap button',noMotion:'No motion detected: tap here to develop',
-shareTxt:'Look at my Polaroid! 📸 Made with https://easylandx.github.io',
+shareTxt:'Look at my Polaroid! 📸 Made with https://easylandx.github.io',waCopied:'Image copied: paste it into the chat to attach it',waCopyFail:'Couldn’t copy the image: use Save and attach it',
 tipIos:'To install: tap the Share icon in your browser’s toolbar, then choose “Add to Home Screen”.',
 tipAndPrompt:'Add PolaPro to your home screen so it opens like a normal app.',
 tipAndroid:'To install: tap the browser menu (⋮), then choose “Install app” or “Add to Home screen”.',
@@ -143,7 +143,7 @@ finding:'Buscando una foto aleatoria…',findingT:a=>'Buscando una foto: '+topic
 fail:'No se pudo obtener una foto aleatoria. Inténtalo de nuevo.',failT:a=>'No se encontró ninguna foto en “'+topicLabel(a)+'”. Inténtalo de nuevo o elige otra categoría.',
 printing:'Tu foto se está imprimiendo...',shakeIt:'¡Agita tu iPhone para revelarla!',ready:'¡Tu Polaroid está lista!',shakeNow:'¡Agita tu iPhone ahora!',
 tapEnable:'Toca para activar agitar',shakeBlocked:'Agitar bloqueado: usa el botón de tocar',shakeNA:'Agitar no disponible: usa el botón de tocar',noMotion:'No se detectó movimiento: toca aquí para revelar',
-shareTxt:'¡Mira mi Polaroid! 📸 Hecho con https://easylandx.github.io',
+shareTxt:'¡Mira mi Polaroid! 📸 Hecho con https://easylandx.github.io',waCopied:'Imagen copiada: pégala en el chat para adjuntarla',waCopyFail:'No se pudo copiar la imagen: usa Guardar y adjúntala',
 tipIos:'Para instalar: toca el icono de Compartir en la barra de tu navegador y elige “Añadir a pantalla de inicio”.',
 tipAndPrompt:'Añade PolaPro a tu pantalla de inicio para abrirla como una app normal.',
 tipAndroid:'Para instalar: toca el menú del navegador (⋮) y elige “Instalar app” o “Añadir a pantalla de inicio”.',
@@ -301,8 +301,19 @@ $('save').onclick=async()=>{
   if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f]});return;}catch(e){if(e.name==='AbortError')return;}}
   const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='polaroid.jpg';document.body.appendChild(a);a.click();a.remove();
 };
+const isPhone=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 $('wa').onclick=async()=>{
-  const text=$('txt').value;const b=await blob();const f=new File([b],'polaroid.jpg',{type:'image/jpeg'});
+  const text=$('txt').value;
+  if(!isPhone){
+    // computer: open WhatsApp Web straight away (pick a contact, then send)
+    let cp=null;
+    try{cp=navigator.clipboard.write([new ClipboardItem({'image/png':new Promise(res=>build().toBlob(res,'image/png'))})]);}catch(e){cp=null;}
+    window.open('https://web.whatsapp.com/send?text='+encodeURIComponent(text),'_blank');
+    if(cp){try{await cp;setMsg('waCopied');}catch(e){setMsg('waCopyFail');}}
+    else setMsg('waCopyFail');
+    return;
+  }
+  const b=await blob();const f=new File([b],'polaroid.jpg',{type:'image/jpeg'});
   if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],text});return;}catch(e){if(e.name==='AbortError')return;}}
   window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
 };
