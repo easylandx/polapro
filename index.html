@@ -81,42 +81,90 @@ button:disabled{opacity:.6;cursor:default}
   <div class="tray" id="tray">
     <div class="print" id="print">
       <div class="pic" id="pic"><canvas id="cv" width="700" height="700"></canvas>
-        <button class="shake" id="shake">Enable shake</button></div>
+        <button class="shake" id="shake" data-k="enableShake">Enable shake</button></div>
       <div class="cap"><span id="capt"></span></div>
     </div>
   </div>
   <div class="btns" id="main">
-    <button id="take">📷 Take photo</button>
-    <button id="up" class="alt">🖼 Upload</button>
+    <button id="take" data-k="take">📷 Take photo</button>
+    <button id="up" class="alt" data-k="up">🖼 Upload</button>
   </div>
   <div class="btns r2">
-    <button id="rnd" class="alt">🎲 Random</button>
+    <button id="rnd" class="alt" data-k="rnd">🎲 Random</button>
+    <button id="es" type="button">ESPAÑOL</button>
   </div>
   <input type="file" id="fcam" accept="image/*" capture="environment">
   <input type="file" id="fup" accept="image/*">
-  <p class="msg"><span id="msg">Take a photo or upload one</span> <button class="link" id="tap" style="display:none">or tap here to develop</button></p>
+  <p class="msg"><span id="msg" data-k="start">Take a photo or upload one</span> <button class="link" id="tap" data-k="tap" style="display:none">or tap here to develop</button></p>
   <div class="bar" id="bar"><i id="fill"></i></div>
   <div class="share" id="share">
     <textarea id="txt"></textarea>
     <div class="btns">
-      <button class="alt" id="save">💾 Save</button>
+      <button class="alt" id="save" data-k="save">💾 Save</button>
       <button class="wa" id="wa">WhatsApp</button>
     </div>
   </div>
 </div>
 <a class="elx" href="https://easylandx.github.io" target="_blank" rel="noopener">EasyLandX</a>
-<button class="elx inst" id="install" type="button">⬇ Install app</button>
+<button class="elx inst" id="install" type="button" data-k="install">⬇ Install app</button>
 <div class="pick" id="pick" role="dialog" aria-modal="true" aria-labelledby="picktitle">
   <div class="pickbox" id="pickbox">
-    <h2 id="picktitle">Choose a category</h2>
-    <button class="chip any" id="pickany" type="button">🎲 Surprise me (any topic)</button>
+    <h2 id="picktitle" data-k="pickTitle">Choose a category</h2>
+    <button class="chip any" id="pickany" type="button" data-k="pickAny">🎲 Surprise me (any topic)</button>
     <div id="pickgroups"></div>
-    <button class="pickx" id="pickx" type="button">Cancel</button>
+    <button class="pickx" id="pickx" type="button" data-k="cancel">Cancel</button>
   </div>
 </div>
-<div class="tip" id="tip" role="status" hidden><span id="tiptxt"></span><button class="tipgo" id="tipgo" type="button" hidden>Install now</button></div>
+<div class="tip" id="tip" role="status" hidden><span id="tiptxt"></span><button class="tipgo" id="tipgo" type="button" data-k="installNow" hidden>Install now</button></div>
 <script>
 const $=id=>document.getElementById(id);
+// ---- language (English / Español) ----
+const I={
+en:{start:'Take a photo or upload one',take:'📷 Take photo',up:'🖼 Upload',rnd:'🎲 Random',tap:'or tap here to develop',save:'💾 Save',install:'⬇ Install app',installNow:'Install now',enableShake:'Enable shake',
+pickTitle:'Choose a category',pickAny:'🎲 Surprise me (any topic)',cancel:'Cancel',camAlt:'Polaroid Spirit 600 camera',
+finding:'Finding a random photo…',findingT:a=>'Finding a photo: '+topicLabel(a)+'…',
+fail:'Couldn’t get a random photo. Try again.',failT:a=>'Couldn’t find a photo in “'+topicLabel(a)+'”. Try again or pick another category.',
+printing:'Your photo is printing...',shakeIt:'Shake your iPhone to develop it!',ready:'Your Polaroid is ready!',shakeNow:'Shake your iPhone now!',
+tapEnable:'Tap to enable shake',shakeBlocked:'Shake blocked: use the tap button',shakeNA:'Shake not available: use the tap button',noMotion:'No motion detected: tap here to develop',
+shareTxt:'Look at my Polaroid! 📸 Made with https://easylandx.github.io',
+tipIos:'To install: tap the Share icon in your browser’s toolbar, then choose “Add to Home Screen”.',
+tipAndPrompt:'Add PolaPro to your home screen so it opens like a normal app.',
+tipAndroid:'To install: tap the browser menu (⋮), then choose “Install app” or “Add to Home screen”.',
+tipSafari:'To install: in Safari, choose File → Add to Dock.',
+tipDesk:'To install: click the install icon at the right of the address bar, or open the Chrome menu (⋮), then Cast, save, and share, then “Install page as app”.',
+g_Nature:'Nature','g_Society & Culture':'Society & Culture',g_Science:'Science',g_Engineering:'Engineering',
+tp_Animalia:'Animalia',tp_Fossils:'Fossils',tp_Landscapes:'Landscapes','tp_Marine organisms':'Marine organisms',tp_Plantae:'Plantae',tp_Weather:'Weather',
+tp_Art:'Art',tp_Flags:'Flags',tp_History:'History',tp_Language:'Language',tp_Literature:'Literature',tp_Music:'Music',tp_Objects:'Objects',
+tp_Astronomy:'Astronomy',tp_Biology:'Biology',tp_Chemistry:'Chemistry','tp_Earth sciences':'Earth sciences',tp_Mathematics:'Mathematics',tp_Medicine:'Medicine',tp_Physics:'Physics',tp_Technology:'Technology',
+tp_Architecture:'Architecture','tp_Environmental engineering':'Environmental','tp_Geophysical engineering':'Geophysical','tp_Mechanical engineering':'Mechanical'},
+es:{start:'Haz una foto o sube una',take:'📷 Tomar foto',up:'🖼 Subir',rnd:'🎲 Aleatoria',tap:'o toca aquí para revelar',save:'💾 Guardar',install:'⬇ Instalar app',installNow:'Instalar ahora',enableShake:'Activar agitar',
+pickTitle:'Elige una categoría',pickAny:'🎲 Sorpréndeme (cualquier tema)',cancel:'Cancelar',camAlt:'Cámara Polaroid Spirit 600',
+finding:'Buscando una foto aleatoria…',findingT:a=>'Buscando una foto: '+topicLabel(a)+'…',
+fail:'No se pudo obtener una foto aleatoria. Inténtalo de nuevo.',failT:a=>'No se encontró ninguna foto en “'+topicLabel(a)+'”. Inténtalo de nuevo o elige otra categoría.',
+printing:'Tu foto se está imprimiendo...',shakeIt:'¡Agita tu iPhone para revelarla!',ready:'¡Tu Polaroid está lista!',shakeNow:'¡Agita tu iPhone ahora!',
+tapEnable:'Toca para activar agitar',shakeBlocked:'Agitar bloqueado: usa el botón de tocar',shakeNA:'Agitar no disponible: usa el botón de tocar',noMotion:'No se detectó movimiento: toca aquí para revelar',
+shareTxt:'¡Mira mi Polaroid! 📸 Hecho con https://easylandx.github.io',
+tipIos:'Para instalar: toca el icono de Compartir en la barra de tu navegador y elige “Añadir a pantalla de inicio”.',
+tipAndPrompt:'Añade PolaPro a tu pantalla de inicio para abrirla como una app normal.',
+tipAndroid:'Para instalar: toca el menú del navegador (⋮) y elige “Instalar app” o “Añadir a pantalla de inicio”.',
+tipSafari:'Para instalar: en Safari, elige Archivo → Añadir al Dock.',
+tipDesk:'Para instalar: haz clic en el icono de instalar a la derecha de la barra de direcciones, o abre el menú de Chrome (⋮), luego Enviar, guardar y compartir, y “Instalar página como aplicación”.',
+g_Nature:'Naturaleza','g_Society & Culture':'Sociedad y cultura',g_Science:'Ciencia',g_Engineering:'Ingeniería',
+tp_Animalia:'Animales',tp_Fossils:'Fósiles',tp_Landscapes:'Paisajes','tp_Marine organisms':'Organismos marinos',tp_Plantae:'Plantas',tp_Weather:'Clima',
+tp_Art:'Arte',tp_Flags:'Banderas',tp_History:'Historia',tp_Language:'Idioma',tp_Literature:'Literatura',tp_Music:'Música',tp_Objects:'Objetos',
+tp_Astronomy:'Astronomía',tp_Biology:'Biología',tp_Chemistry:'Química','tp_Earth sciences':'Ciencias de la Tierra',tp_Mathematics:'Matemáticas',tp_Medicine:'Medicina',tp_Physics:'Física',tp_Technology:'Tecnología',
+tp_Architecture:'Arquitectura','tp_Environmental engineering':'Ambiental','tp_Geophysical engineering':'Geofísica','tp_Mechanical engineering':'Mecánica'}};
+let L='en';
+const tr=(k,a)=>{const v=I[L][k];return typeof v==='function'?v(a):v;};
+function setK(el,k){el.dataset.k=k;delete el.dataset.a;el.textContent=tr(k);}
+function setMsg(k,a){const m=$('msg');m.dataset.k=k;if(a===undefined)delete m.dataset.a;else m.dataset.a=a;m.textContent=tr(k,a);}
+function setLang(l){
+  const prev=L;L=l;document.documentElement.lang=l;
+  document.querySelectorAll('[data-k]').forEach(e=>{e.textContent=tr(e.dataset.k,e.dataset.a);});
+  $('cam').alt=tr('camAlt');
+  if($('txt').value===I[prev].shareTxt)$('txt').value=tr('shareTxt');
+  if(window.buildPick)window.buildPick();
+}
 let img=null,p=0,done=false,active=false,last=0,rafOn=false;
 // match page background to the yellow of the camera photo
 $('cam').onload=()=>{try{const c=document.createElement('canvas');c.width=c.height=2;const x=c.getContext('2d');x.drawImage($('cam'),0,0,2,2);const d=x.getImageData(0,0,1,1).data;document.body.style.background=`rgb(${d[0]},${d[1]},${d[2]})`;}catch(e){}};
@@ -131,13 +179,13 @@ const GROUPS=[
 ['Science',['Astronomy','Biology','Chemistry','Earth sciences','Mathematics','Medicine','Physics','Technology']],
 ['Engineering',['Architecture','Environmental engineering','Geophysical engineering','Mechanical engineering']]];
 const TOPICS=[].concat(...GROUPS.map(g=>g[1]));
-const topicLabel=t=>t.replace(/ engineering$/,'');
+const topicLabel=t=>tr('tp_'+t);
 const OFFS=[1000,500,200,50,0,0];
 function cleanTitle(t){return (t||'').replace(/^File:/i,'').replace(/\.(jpe?g|png|tiff?)$/i,'').replace(/_/g,' ').trim();}
 function loadImg(u){return new Promise((res,rej)=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>res(i);i.onerror=rej;i.src=u;});}
 async function randomPhoto(chosen){
   if(rndBusy)return;rndBusy=true;const rb=$('rnd');rb.disabled=true;
-  $('msg').textContent=chosen?'Finding a photo: '+topicLabel(chosen)+'…':'Finding a random photo…';
+  if(chosen)setMsg('findingT',chosen);else setMsg('finding');
   try{
     for(let a=0;a<OFFS.length;a++){
       const topic=chosen||TOPICS[Math.floor(Math.random()*TOPICS.length)];
@@ -153,23 +201,28 @@ async function randomPhoto(chosen){
       }
     }
     throw new Error('none');
-  }catch(e){$('msg').textContent=chosen?'Couldn’t find a photo in “'+topicLabel(chosen)+'”. Try again or pick another category.':'Couldn’t get a random photo. Try again.';}
+  }catch(e){if(chosen)setMsg('failT',chosen);else setMsg('fail');}
   rndBusy=false;rb.disabled=false;
 }
 // category picker
 (function(){
   const pk=$('pick'),gr=$('pickgroups');
-  GROUPS.forEach(g=>{
-    const h=document.createElement('h3');h.textContent=g[0];gr.appendChild(h);
-    const w=document.createElement('div');w.className='chips';
-    g[1].forEach(t=>{const b=document.createElement('button');b.type='button';b.className='chip';b.textContent=topicLabel(t);b.onclick=()=>{close();randomPhoto(t);};w.appendChild(b);});
-    gr.appendChild(w);
-  });
+  function buildPick(){
+    gr.innerHTML='';
+    GROUPS.forEach(g=>{
+      const h=document.createElement('h3');h.textContent=tr('g_'+g[0]);gr.appendChild(h);
+      const w=document.createElement('div');w.className='chips';
+      g[1].forEach(t=>{const b=document.createElement('button');b.type='button';b.className='chip';b.textContent=topicLabel(t);b.onclick=()=>{close();randomPhoto(t);};w.appendChild(b);});
+      gr.appendChild(w);
+    });
+  }
+  window.buildPick=buildPick;buildPick();
   function open(){if(rndBusy)return;pk.classList.add('open');$('pickbox').scrollTop=0;}
   function close(){pk.classList.remove('open');}
   $('rnd').onclick=open;
   $('pickany').onclick=()=>{close();randomPhoto();};
   $('pickx').onclick=close;
+  $('es').onclick=()=>{setLang('es');$('es').style.display='none';};
   pk.addEventListener('click',e=>{if(e.target===pk)close();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
 })();
@@ -183,8 +236,8 @@ function start(){
   const pr=$('print');pr.classList.remove('out');pr.style.display='block';
   void pr.offsetWidth;setTimeout(()=>pr.classList.add('out'),50);
   playEject();
-  $('msg').textContent='Your photo is printing...';
-  setTimeout(()=>{$('msg').textContent='Shake your iPhone to develop it!';$('bar').style.display='block';$('fill').style.width='0';$('tap').style.display='inline';setupShake();},3000);
+  setMsg('printing');
+  setTimeout(()=>{setMsg('shakeIt');$('bar').style.display='block';$('fill').style.width='0';$('tap').style.display='inline';setupShake();},3000);
 }
 function apply(){
   const cv=$('cv'),q=Math.pow(p,1.4);
@@ -196,10 +249,10 @@ function apply(){
 function bump(a){if(!img||done)return;active=true;p=Math.min(1,p+a);apply();if(!rafOn){rafOn=true;requestAnimationFrame(drift);}}
 function drift(){ if(done){rafOn=false;return;} p=Math.min(1,p+.0025);apply();requestAnimationFrame(drift);}
 function finish(){
-  done=true;$('msg').textContent='Your Polaroid is ready!';$('tap').style.display='none';$('shake').style.display='none';
+  done=true;setMsg('ready');$('tap').style.display='none';$('shake').style.display='none';
   $('capt').textContent=curTitle;$('capt').style.opacity=1;
   $('cv').style.filter='none';$('cv').style.opacity=1;
-  $('txt').value='Look at my Polaroid! 📸 Made with https://easylandx.github.io';
+  $('txt').value=tr('shareTxt');
   $('share').style.display='block';
   setTimeout(()=>$('share').scrollIntoView({behavior:'smooth',block:'end'}),400);
   if(navigator.vibrate)navigator.vibrate(60);
@@ -211,8 +264,8 @@ function setupShake(){
   if(sOn)return;
   const D=window.DeviceMotionEvent;
   if(D&&typeof D.requestPermission==='function'){
-    const b=$('shake');b.style.display='block';b.textContent='Tap to enable shake';
-    b.onclick=async()=>{try{const r=await D.requestPermission();if(r==='granted'){listen();b.style.display='none';$('msg').textContent='Shake your iPhone now!';}else b.textContent='Shake blocked: use the tap button';}catch(e){b.textContent='Shake not available: use the tap button';}};
+    const b=$('shake');b.style.display='block';setK(b,'tapEnable');
+    b.onclick=async()=>{try{const r=await D.requestPermission();if(r==='granted'){listen();b.style.display='none';setMsg('shakeNow');}else setK(b,'shakeBlocked');}catch(e){setK(b,'shakeNA');}};
   }else if(D){listen();}
 }
 function listen(){
@@ -229,7 +282,7 @@ function listen(){
     const t=Date.now();
     if(s>9&&t-last>180){last=t;bump(.34);if(navigator.vibrate)navigator.vibrate(25);}
   });
-  setTimeout(()=>{if(!got&&!done)$('msg').textContent='No motion detected: tap here to develop';},2500);
+  setTimeout(()=>{if(!got&&!done)setMsg('noMotion');},2500);
 }
 // build final image
 function build(){
@@ -281,15 +334,15 @@ if('serviceWorker' in navigator&&location.protocol.startsWith('http')){window.ad
     return true;
   }
   function fill(){
-    let t='',go=false;
-    if(ios){t='To install: tap the Share icon in your browser’s toolbar, then choose “Add to Home Screen”.';}
+    let k='',go=false;
+    if(ios){k='tipIos';}
     else if(android){
-      if(window.__pp){t='Add PolaPro to your home screen so it opens like a normal app.';go=true;}
-      else t='To install: tap the browser menu (⋮), then choose “Install app” or “Add to Home screen”.';
+      if(window.__pp){k='tipAndPrompt';go=true;}
+      else k='tipAndroid';
     }
-    else if(safariDesk){t='To install: in Safari, choose File → Add to Dock.';}
-    else{t='To install: click the install icon at the right of the address bar, or open the Chrome menu (⋮), then Cast, save, and share, then “Install page as app”.';}
-    tt.textContent=t;tb.hidden=!go;
+    else if(safariDesk){k='tipSafari';}
+    else{k='tipDesk';}
+    tt.dataset.k=k;tt.textContent=tr(k);tb.hidden=!go;
   }
   b.onclick=()=>{
     if(!tip.hidden){tip.hidden=true;return;}
