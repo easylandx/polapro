@@ -7,8 +7,8 @@
   "scope": "/polapro/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#fdd20a",
-  "theme_color": "#fdd20a",
+  "background_color": "#fed90f",
+  "theme_color": "#fed90f",
   "icons": [
     {
       "src": "/polapro/icon-192.png",
